@@ -2,15 +2,10 @@
 
 namespace xj\dropzone;
 
-use Yii;
-use yii\helpers\Json;
-use yii\helpers\Html;
-use yii\helpers\Url;
-use yii\web\View;
-use yii\helpers\ArrayHelper;
-use yii\web\JsExpression;
 use yii\base\Widget;
-use xj\uploadify\UploadifyAsset;
+use yii\helpers\Html;
+use yii\helpers\Json;
+use yii\web\View;
 
 /**
  * Dropzone Widget
@@ -52,9 +47,10 @@ class Dropzone extends Widget {
      * @see http://www.dropzonejs.com/#config-paramName
      */
     public $paramName = 'Filedata';
-    public $warpTag = 'div';
-    public $warpOptions = [];
+    public $wrapTag = 'div';
+    public $wrapOptions = [];
     public $formNotiMessage = 'Drop files here or click to upload.';
+    public $formNotiMessageOptions = [];
     public $formOptions = [];
 
     /**
@@ -101,14 +97,15 @@ class Dropzone extends Widget {
     private function renderTag() {
         $id = $this->id;
         $formNotiMessage = $this->formNotiMessage;
-        $warpOptions = $this->warpOptions;
+        $wrapOptions = $this->wrapOptions;
         $formOptions = $this->formOptions;
         $formOptions['id'] = $id;
+        Html::addCssClass($this->formNotiMessageOptions, 'dz-message');
 
         $form = Html::beginForm($this->url, 'POST', $formOptions);
-        $form .= "<div class=\"dz-message\">{$formNotiMessage}</div>";
+        $form .= Html::tag('div', $formNotiMessage, $this->formNotiMessageOptions);
         $form .= Html::endForm();
-        return Html::tag($this->warpTag, $form, $warpOptions);
+        return Html::tag($this->wrapTag, $form, $wrapOptions);
     }
 
     /**
