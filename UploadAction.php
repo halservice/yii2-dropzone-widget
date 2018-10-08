@@ -13,26 +13,23 @@ use yii\base\Exception;
  * @author xjflyttp <xjflyttp@gmail.com>
  * 
  */
-class UploadAction extends Action {
-
+class UploadAction extends Action
+{
     /**
      * save path
      * @var string 
      */
     public $uploadBasePath = '@webroot/upload';
-
     /**
      * web url
      * @var string 
      */
     public $uploadBaseUrl = '@web/upload';
-
     /**
      *  $this->output['fileUrl'] = $this->uploadBaseUrl . '/' . $this->filename;
      * @var bool
      */
     public $autoOutput = true;
-
     /**
      *
       {filename} 会替换成原文件名,配置这项需要注意中文乱码问题
@@ -49,7 +46,6 @@ class UploadAction extends Action {
      * @var string | Closure
      */
     public $format = '{yyyy}{mm}{dd}/{time}{rand:6}';
-
     /**
      * file validator options
      * @var []
@@ -61,62 +57,55 @@ class UploadAction extends Action {
      * ]
      */
     public $validateOptions = [];
-
     /**
      * file instance
      * @var UploadedFile
      */
     public $uploadFileInstance;
-
     /**
      * saved format filename
      * image/yyyymmdd/xxx.jpg
      * @var string 
      */
     public $filename;
-
     /**
      * saved format filename full path
      * /var/www/htdocs/image/yyyymmdd/xxx.jpg
      * @var string
      */
     public $fullFilename;
-
     /**
      * throw yii\base\Exception will break
      * @var Closure
      * beforeValidate($UploadAction)
      */
     public $beforeValidate;
-
     /**
      * throw yii\base\Exception will break
      * @var Closure
      * afterValidate($UploadAction)
      */
     public $afterValidate;
-
     /**
      * throw yii\base\Exception will break
      * @var Closure
      * beforeSave($UploadAction)
      */
     public $beforeSave;
-
     /**
      * throw yii\base\Exception will break
      * @var Closure
      * afterSave($UploadAction)
      */
     public $afterSave;
-
     /**
      * output
      * @var []
      */
     public $output = ['error' => false, 'msg' => 'Success'];
 
-    public function init() {
+    public function init()
+    {
         //upload instance
         $this->uploadFileInstance = UploadedFile::getInstanceByName('Filedata');
 
@@ -132,7 +121,8 @@ class UploadAction extends Action {
         return parent::init();
     }
 
-    public function run() {
+    public function run()
+    {
         try {
             if ($this->uploadFileInstance === null) {
                 throw new Exception('upload not exist');
@@ -165,11 +155,11 @@ class UploadAction extends Action {
             $this->output['error'] = true;
             $this->output['msg'] = $e->getMessage();
         }
-        Yii::$app->response->format = 'json';
-        return $this->output;
+        return $this->controller->asJson($this->output);
     }
 
-    private function save() {
+    private function save()
+    {
         $filename = $this->getSaveFileNameWithNotExist();
         $basePath = $this->uploadBasePath;
         $fullFilename = $basePath . '/' . $filename;
@@ -191,14 +181,16 @@ class UploadAction extends Action {
     /**
      * output fileUrl
      */
-    private function processOutput() {
+    private function processOutput()
+    {
         $this->output['fileUrl'] = $this->uploadBaseUrl . '/' . $this->filename;
     }
 
     /**
      * 取得没有碰撞的FileName
      */
-    private function getSaveFileNameWithNotExist() {
+    private function getSaveFileNameWithNotExist()
+    {
         $retryCount = 10;
         $currentCount = 0;
         $basePath = $this->uploadBasePath;
@@ -218,7 +210,8 @@ class UploadAction extends Action {
      * convert format property to string
      * @return string
      */
-    private function getSaveFileName() {
+    private function getSaveFileName()
+    {
         if (is_callable($this->format) || is_array($this->format)) {
             return call_user_func($this->format, $this);
         }
@@ -255,7 +248,8 @@ class UploadAction extends Action {
      * validate upload file
      * @throws Exception
      */
-    private function validate() {
+    private function validate()
+    {
         $file = $this->uploadFileInstance;
         $error = [];
         $validator = new FileValidator($this->validateOptions);
@@ -268,8 +262,8 @@ class UploadAction extends Action {
      * 
      * @return UploadedFile
      */
-    public function getUploadFileInstance() {
+    public function getUploadFileInstance()
+    {
         return $this->uploadFileInstance;
     }
-
 }
