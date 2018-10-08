@@ -86,7 +86,7 @@ function(file, data) {
 EOF
 ),
     ],
-    'warpOptions' => ['id' => 'album-upload-dropzone'],
+    'wrapOptions' => ['id' => 'album-upload-dropzone'],
     'formOptions' => ['class' => 'album-upload-dropzone dz-clickable'],
 ]);
 ```
